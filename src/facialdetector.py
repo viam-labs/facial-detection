@@ -18,6 +18,8 @@ from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 
 from viam.services.vision import VisionClient
+from viam.services.service_base import ServiceBase
+
 from viam.components.camera import Camera
 
 from viam.logging import getLogger
@@ -27,10 +29,10 @@ import asyncio
 
 LOGGER = getLogger(__name__)
 
-class FacialDetector(VisionClient, Reconfigurable):
+class FacialDetector(ServiceBase, Reconfigurable):
     
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "detector"), "facial-detector")
-    
+    SUBTYPE: Final = VisionClient.SUBTYPE
     # opencv, retinaface, mtcnn, ssd, dlib, mediapipe or yolov8
     detection_framework: str
 
