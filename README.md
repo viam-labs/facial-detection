@@ -12,8 +12,8 @@ The facial-detector resource provides the following methods from Viam's built-in
 
 ## Viam Service Configuration
 
-The following attributes may be configured as speech service config attributes.
-For example: the following configuration would set up listening mode, use an ElevenLabs voice "Antoni", make AI completions available, and use a 'Gollum' persona for AI completions:
+The following attributes may be configured as facial-detector config attributes.
+For example: the following configuration would use the `ssd` framework:
 
 ``` json
 {
