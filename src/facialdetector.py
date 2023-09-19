@@ -59,7 +59,7 @@ class FacialDetector(Vision, Reconfigurable):
     async def get_detections_from_camera(
         self, camera_name: str, *, extra: Optional[Mapping[str, Any]] = None, timeout: Optional[float] = None
     ) -> List[Detection]:
-        cam = Camera.from_robot(self.parent, "cam")
+        cam = Camera.from_robot(self.parent, camera_name)
         cam_image = await cam.get_image()
         return self.get_detections(cam_image)
     
