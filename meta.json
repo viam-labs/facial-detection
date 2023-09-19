@@ -1,0 +1,13 @@
+{
+  "module_id": "viam-labs:facial-detector",
+  "visibility": "public",
+  "url": "https://github.com/viam-labs/facial-detection",
+  "description": "facial-detector is a Viam modular vision service that uses the DeepFace library to perform facial detections",
+  "models": [
+    {
+      "api": "rdk:service:vision",
+      "model": "viam-labs:detector:facial-detector"
+    }
+  ],
+  "entrypoint": "run.sh"
+}
