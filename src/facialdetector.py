@@ -29,7 +29,7 @@ import asyncio
 
 LOGGER = getLogger(__name__)
 
-class facialdetector(Vision, Reconfigurable):
+class FacialDetector(Vision, Reconfigurable):
     
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "detector"), "facial-detector")
     
