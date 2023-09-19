@@ -23,6 +23,6 @@ For example: the following configuration would set up listening mode, use an Ele
 
 ### detection_framework
 
-*enum - "opencv"|"retinaface"|"mtcnn"|"ssd"|"dlib"|"mediapipe"|"yolov8"|"google" (default: "ssd")*
+*enum - "opencv"|"retinaface"|"mtcnn"|"ssd"|"dlib"|"mediapipe"|"yolov8" (default: "ssd")*
 
 The detection framework to use for facial detection.  `ssd` is chosen as the default for a good balance of speed and accuracy.
