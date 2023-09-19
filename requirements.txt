@@ -1,3 +1,4 @@
-viam-sdk
+viam-sdk  >= 0.5.1
 deepface
 pillow
+tensorflow==2.14.0rc1

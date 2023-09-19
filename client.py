@@ -2,10 +2,11 @@ import asyncio
 import os
 from PIL import Image
 
-from src.facialdetector import facialdetector
+from src.facialdetector import FacialDetector
 
 from viam import logging
 from viam.robot.client import RobotClient
+from viam.services.vision import VisionClient
 from viam.rpc.dial import Credentials, DialOptions
 
 # these must be set, you can get them from your robot's 'CODE SAMPLE' tab
@@ -24,7 +25,7 @@ async def main():
     print("Resources:")
     print(robot.resource_names)
 
-    fd = FacialDetector.from_robot(robot, name="facialdetector")
+    fd = VisionClient.from_robot(robot, name="facialdetector")
 
     im = Image.open(r"./father_son.jpg") 
     detections = await fd.get_detections(im)

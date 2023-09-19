@@ -7,19 +7,17 @@ from PIL import Image
 from deepface import DeepFace
 
 from viam.media.video import RawImage
-from viam.proto.common import PointCloudObject
-from viam.proto.service.vision import Classification, Detection
 from viam.resource.types import RESOURCE_NAMESPACE_RDK, RESOURCE_TYPE_SERVICE, Subtype
 from viam.utils import ValueTypes
 
 from viam.module.types import Reconfigurable
 from viam.proto.app.robot import ComponentConfig
 from viam.proto.service.vision import Detection
-from viam.proto.common import ResourceName, Vector3
+from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 
-from viam.services.vision import Vision
+from viam.services.vision import VisionClient
 from viam.components.camera import Camera
 
 from viam.logging import getLogger
@@ -29,7 +27,7 @@ import asyncio
 
 LOGGER = getLogger(__name__)
 
-class FacialDetector(Vision, Reconfigurable):
+class FacialDetector(VisionClient, Reconfigurable):
     
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "detector"), "facial-detector")
     
@@ -47,7 +45,7 @@ class FacialDetector(Vision, Reconfigurable):
     @classmethod
     def validate(cls, config: ComponentConfig):
         frameworks = ['opencv', 'retinaface', 'mtcnn', 'ssd', 'dlib', 'mediapipe','yolov8']
-        detection_framework = config.attributes.fields["detection_framework"].string_value
+        detection_framework = config.attributes.fields["detection_framework"].string_value or 'mtcnn'
         if not detection_framework in frameworks:
             raise Exception("detection_framework must be one of 'opencv', 'retinaface', 'mtcnn', 'ssd', 'dlib', 'mediapipe','yolov8'")
         return
