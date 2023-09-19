@@ -47,14 +47,14 @@ class FacialDetector(Vision, Reconfigurable):
     @classmethod
     def validate(cls, config: ComponentConfig):
         frameworks = ['opencv', 'retinaface', 'mtcnn', 'ssd', 'dlib', 'mediapipe','yolov8']
-        detection_framework = config.attributes.fields["detection_framework"].string_value or 'mtcnn'
+        detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
         if not detection_framework in frameworks:
             raise Exception("detection_framework must be one of 'opencv', 'retinaface', 'mtcnn', 'ssd', 'dlib', 'mediapipe','yolov8'")
         return
 
     # Handles attribute reconfiguration
     def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
-        self.detection_framework = config.attributes.fields["detection_framework"].string_value or 'mtcnn'
+        self.detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
         return
     
     async def get_detections_from_camera(
@@ -71,7 +71,7 @@ class FacialDetector(Vision, Reconfigurable):
         extra: Optional[Mapping[str, Any]] = None,
         timeout: Optional[float] = None,
     ) -> List[Detection]:
-        results = DeepFace.extract_faces(img_path=numpy.array(image),enforce_detection=False, detector_backend=self.detection_framework)
+        results = DeepFace.extract_faces(img_path=numpy.array(image.convert('RGB')),enforce_detection=False, detector_backend=self.detection_framework)
         detections = []
         for r in results:
             if r["confidence"] > 0:
