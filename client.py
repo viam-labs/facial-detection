@@ -27,7 +27,7 @@ async def main():
 
     fd = VisionClient.from_robot(robot, name="facial_detector")
 
-    im = Image.open(r"./father_son.jpg") 
+    im = Image.open(r"./test/father_son.jpg") 
     print(im)
     detections = await fd.get_detections(im)
     print(detections)
