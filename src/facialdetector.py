@@ -17,8 +17,7 @@ from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 
-from viam.services.vision import VisionClient
-from viam.services.service_base import ServiceBase
+from viam.services.vision import Vision
 
 from viam.components.camera import Camera
 
@@ -26,13 +25,14 @@ from viam.logging import getLogger
 
 import time
 import asyncio
+import numpy
 
 LOGGER = getLogger(__name__)
 
-class FacialDetector(ServiceBase, Reconfigurable):
+class FacialDetector(Vision, Reconfigurable):
     
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "detector"), "facial-detector")
-    SUBTYPE: Final = VisionClient.SUBTYPE
+    #SUBTYPE: Final = VisionClient.SUBTYPE
     # opencv, retinaface, mtcnn, ssd, dlib, mediapipe or yolov8
     detection_framework: str
 
@@ -71,10 +71,22 @@ class FacialDetector(ServiceBase, Reconfigurable):
         extra: Optional[Mapping[str, Any]] = None,
         timeout: Optional[float] = None,
     ) -> List[Detection]:
-        results = DeepFace.extract_faces(img_path=image,enforce_detection=False, detector_backend=self.detection_framework)
+        results = DeepFace.extract_faces(img_path=numpy.array(image),enforce_detection=False, detector_backend=self.detection_framework)
         detections = []
         for r in results:
             if r["confidence"] > 0:
                 detections.append({ "confidence": r["confidence"], "class_name": "face", "x_min": r["facial_area"]["x"], "y_min": r["facial_area"]["y"], 
                                     "x_max": r["facial_area"]["x"] + r["facial_area"]["w"], "y_max": r["facial_area"]["y"] + r["facial_area"]["h"]} )
         return detections
+
+    async def do_command(self):
+        return
+    
+    async def get_classifications(self):
+        return
+    
+    async def get_classifications_from_camera(self):
+        return
+    
+    async def get_object_point_clouds(self):
+        return
