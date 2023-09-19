@@ -32,7 +32,6 @@ LOGGER = getLogger(__name__)
 class FacialDetector(Vision, Reconfigurable):
     
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "detector"), "facial-detector")
-    #SUBTYPE: Final = VisionClient.SUBTYPE
     # opencv, retinaface, mtcnn, ssd, dlib, mediapipe or yolov8
     detection_framework: str
 
@@ -71,6 +70,7 @@ class FacialDetector(Vision, Reconfigurable):
         extra: Optional[Mapping[str, Any]] = None,
         timeout: Optional[float] = None,
     ) -> List[Detection]:
+        # note that some of the detector frameworks do not like RGBA, so we convert to RGB
         results = DeepFace.extract_faces(img_path=numpy.array(image.convert('RGB')),enforce_detection=False, detector_backend=self.detection_framework)
         detections = []
         for r in results:
