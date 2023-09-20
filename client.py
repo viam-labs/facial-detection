@@ -2,8 +2,6 @@ import asyncio
 import os
 from PIL import Image
 
-from src.facialdetector import FacialDetector
-
 from viam import logging
 from viam.robot.client import RobotClient
 from viam.services.vision import VisionClient
