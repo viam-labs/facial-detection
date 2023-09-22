@@ -2,6 +2,13 @@
 
 *facial-detector* is a Viam modular vision service that uses the [DeepFace](https://github.com/serengil/deepface) library to perform facial detections
 
+## Prerequisites
+
+``` bash
+sudo apt update && sudo apt upgrade -y
+apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+```
+
 ## API
 
 The facial-detector resource provides the following methods from Viam's built-in [rdk:service:vision API](https://python.viam.dev/autoapi/viam/services/vision/client/index.html)
