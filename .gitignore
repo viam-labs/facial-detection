@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# Appimage
+*.AppImage*
+AppDir
+appimage-build
+
 # Distribution / packaging
 .Python
 build/
