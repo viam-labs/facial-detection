@@ -161,3 +161,7 @@ cython_debug/
 
 viam-env/
 module.tar.gz
+main.build
+fd
+Dockerfile
+src.build
