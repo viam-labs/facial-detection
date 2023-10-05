@@ -1,0 +1,56 @@
+version: 1
+script:
+  # Remove any previous build
+  - rm -rf AppDir  | true
+  # Make usr and icons dirs
+  - mkdir -p AppDir/usr/src/module
+  - mkdir -p AppDir/usr/share/icons/hicolor/32x32/apps/
+  # Copy the python application code into the AppDir
+  - cp -r src  AppDir/usr/src/module
+  - cp -r run.sh  AppDir/usr/src/module
+  - cp ./icon.png AppDir/usr/share/icons/hicolor/32x32/apps/
+  # Install application dependencies
+  - python3 -m pip install --ignore-installed --prefix=/usr --root=AppDir -r ./requirements.txt
+
+AppDir:
+  path: ./AppDir
+
+  app_info:
+    id: org.viam.facial-detection
+    name: facial-detection
+    icon: icon
+    version: 0.1.0
+    exec: bin/bash
+    exec_args: '-c "${APPDIR}/usr/src/module/run.sh $@"'
+
+  apt:
+    arch: amd64
+    sources:
+      - sourceline: deb [trusted=yes] http://deb.debian.org/debian bookworm main
+      - sourceline: deb [trusted=yes] http://deb.debian.org/debian-security bookworm-security main
+      - sourceline: deb [trusted=yes] http://deb.debian.org/debian bookworm-updates main
+
+    include:
+      - python3
+      - python3-pkg-resources
+      - ffmpeg
+      - bash
+      - libsm6
+      - libxext6
+      - libgl1
+    exclude: []
+  files:
+    exclude:
+      - usr/share/man
+      - usr/share/doc
+
+  runtime:
+    env:
+      PATH: "${APPDIR}/usr/bin:${PATH}"
+      PYTHONHOME: "${APPDIR}/usr"
+      PYTHONPATH: "${APPDIR}/usr/lib/python3.11/site-packages"
+      IN_APPIMAGE: "1"
+
+AppImage:
+  update-information: guess
+  arch: x86_64

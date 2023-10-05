@@ -9,5 +9,5 @@ run-docker:
 
 .PHONY: appimage
 appimage: build-docker
-	docker run --rm -it -v "${PWD}":/module -w /module facial-detection "/usr/local/bin/appimage-builder"
+	docker run --rm -it -v "${PWD}":/module -w /module facial-detection "/bin/bash" "-c" "/usr/local/bin/appimage-builder --recipe ./etc/appimage-`uname -m`.yml"
 

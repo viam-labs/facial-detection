@@ -24,7 +24,7 @@ AppDir:
     exec_args: '-c "${APPDIR}/usr/src/module/run.sh $@"'
 
   apt:
-    arch: amd64
+    arch: arm64
     sources:
       - sourceline: deb [trusted=yes] http://deb.debian.org/debian bookworm main
       - sourceline: deb [trusted=yes] http://deb.debian.org/debian-security bookworm-security main
@@ -37,14 +37,20 @@ AppDir:
       - bash
       - libsm6
       - libxext6
+      - libgl1
     exclude: []
+  files:
+    exclude:
+      - usr/share/man
+      - usr/share/doc
 
   runtime:
     env:
+      PATH: "${APPDIR}/usr/bin:${PATH}"
       PYTHONHOME: "${APPDIR}/usr"
       PYTHONPATH: "${APPDIR}/usr/lib/python3.11/site-packages"
       IN_APPIMAGE: "1"
 
 AppImage:
   update-information: guess
-  arch: x86_64
+  arch: aarch64
