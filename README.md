@@ -28,6 +28,8 @@ For example: the following configuration would use the `ssd` framework:
 }
 ```
 
+Note: if you are going to use *get_detections_from_camera()*, you will need to set any camera that you plan to use as a dependency for this service.
+
 ### detection_framework
 
 *enum - "opencv"|"retinaface"|"mtcnn"|"ssd"|"dlib"|"mediapipe"|"yolov8" (default: "ssd")*

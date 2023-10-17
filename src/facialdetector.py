@@ -53,6 +53,7 @@ class FacialDetector(Vision, Reconfigurable):
 
     # Handles attribute reconfiguration
     def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
+        self.DEPS = dependencies
         self.detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
         return
     
@@ -62,6 +63,14 @@ class FacialDetector(Vision, Reconfigurable):
         cam = Camera.from_robot(self.parent, camera_name)
         cam_image = await cam.get_image()
         return self.get_detections(cam_image)
+    
+    async def get_detections_from_camera(
+        self, camera_name: str, *, extra: Optional[Mapping[str, Any]] = None, timeout: Optional[float] = None
+    ) -> List[Detection]:
+        actual_cam = self.DEPS[Camera.get_resource_name(camera_name)]
+        cam = cast(Camera, actual_cam)
+        cam_image = await cam.get_image(mime_type="image/jpeg")
+        return await self.get_detections(cam_image)
     
     async def get_detections(
         self,
