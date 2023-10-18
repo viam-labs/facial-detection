@@ -56,8 +56,10 @@ class FacialDetector(Vision, Reconfigurable):
         self.DEPS = dependencies
         self.detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
         self.face_labels = dict(config.attributes.fields["face_labels"].struct_value) or {}
-        
-        # store images in memory, this assume there will not be a large number
+        self.disable_detect = config.attributes.fields["disable_detect"].bool_value
+        self.disable_verify = config.attributes.fields["disable_verify"].bool_value
+
+        # store images in memory, this assumes there will not be a large number
         for label in self.face_labels:
             im = Image.open(self.face_labels[label])
             self.face_labels[label] = im
@@ -80,21 +82,34 @@ class FacialDetector(Vision, Reconfigurable):
         timeout: Optional[float] = None,
     ) -> List[Detection]:
         detections = []
-        if len(self.face_labels) == 0:
-            # note that some of the detector frameworks do not like RGBA, so we convert to RGB
+        if self.disable_detect == False:
             results = DeepFace.extract_faces(img_path=numpy.array(image.convert('RGB')),enforce_detection=False, detector_backend=self.detection_framework)
             for r in results:
                 if r["confidence"] > 0:
-                    detections.append({ "confidence": r["confidence"], "class_name": "face", "x_min": r["facial_area"]["x"], "y_min": r["facial_area"]["y"], 
-                                        "x_max": r["facial_area"]["x"] + r["facial_area"]["w"], "y_max": r["facial_area"]["y"] + r["facial_area"]["h"]} )
-        else:
-            for label in self.face_labels:
-                r = DeepFace.verify(enforce_detection=False, align=False, detector_backend=self.detection_framework, img1_path = numpy.array(self.face_labels[label].convert('RGB')), img2_path = numpy.array(image.convert('RGB')))
-                if r["verified"] == True:
-                    detections.append({ "confidence": 1, "class_name": label, "x_min": r["facial_areas"]["img2"]["x"], "y_min": r["facial_areas"]["img2"]["y"], 
-                                        "x_max": r["facial_areas"]["img2"]["x"] + r["facial_areas"]["img2"]["w"], "y_max": r["facial_areas"]["img2"]["y"] + r["facial_areas"]["img2"]["h"]} )
+                    detection = { "confidence": r["confidence"], "class_name": "face", "x_min": r["facial_area"]["x"], "y_min": r["facial_area"]["y"], 
+                                        "x_max": r["facial_area"]["x"] + r["facial_area"]["w"], "y_max": r["facial_area"]["y"] + r["facial_area"]["h"]}
+                    if self.disable_verify == False:
+                        v = await self.verify_image(image)
+                        if len(v):
+                            detection["class_name"] = v["class_name"]
+                    detections.append(detection)            
+        elif self.disable_verify == False:
+            v = await self.verify_image(image)
+            if len(v):
+                detections.append(v)
+        
         return detections
 
+    async def verify_image(self, image: Union[Image.Image, RawImage]):
+        detection = {}
+        for label in self.face_labels:
+                r = DeepFace.verify(enforce_detection=False, align=False, detector_backend=self.detection_framework, img1_path = numpy.array(self.face_labels[label].convert('RGB')), img2_path = numpy.array(image.convert('RGB')))
+                if r["verified"] == True:
+                    detection = { "confidence": 1, "class_name": label, "x_min": r["facial_areas"]["img2"]["x"], "y_min": r["facial_areas"]["img2"]["y"], 
+                                        "x_max": r["facial_areas"]["img2"]["x"] + r["facial_areas"]["img2"]["w"], "y_max": r["facial_areas"]["img2"]["y"] + r["facial_areas"]["img2"]["h"]}
+                    break;
+        return detection
+    
     async def do_command(self):
         return
     

@@ -15,11 +15,7 @@ The facial-detector resource provides the following methods from Viam's built-in
 
 ### get_detections(image=*binary*)
 
-Note: any detected face will return with the label "face", unless labels are specified via [face_labels](#face_labels).
-
 ### get_detections_from_camera(camera_name=*string*)
-
-Note: any detected face will return with the label "face", unless labels are specified via [face_labels](#face_labels).
 
 ## Viam Service Configuration
 
@@ -55,3 +51,16 @@ For example:
 ```
 
 If the input image from get_detections() or get_detections_from_camera() verifies as a match of one of the images specified in the *face_labels* paths, the associated label will be returned.
+
+### disable_detect
+
+*boolean(default:false)*
+
+If false, any faces detected but not verified as matching a label (if [disable_verify](#disable_verify) is false and [face_labels](#face_labels) are set) will be labeled as *face*.
+
+### disable_verify
+
+*boolean(default:false)*
+
+If false and [face_labels](#face_labels) are set, will attempt to verify any faces detected.
+If you only want verified faces to be labeled, set this to false and [disable_detect](#disable_detect) to true.
