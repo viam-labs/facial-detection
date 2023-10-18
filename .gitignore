@@ -165,3 +165,4 @@ main.build
 fd
 Dockerfile
 src.build
+.installed

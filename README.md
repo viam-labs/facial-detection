@@ -15,7 +15,11 @@ The facial-detector resource provides the following methods from Viam's built-in
 
 ### get_detections(image=*binary*)
 
+Note: any detected face will return with the label "face", unless labels are specified via [face_labels](#face_labels).
+
 ### get_detections_from_camera(camera_name=*string*)
+
+Note: any detected face will return with the label "face", unless labels are specified via [face_labels](#face_labels).
 
 ## Viam Service Configuration
 
@@ -35,3 +39,19 @@ Note: if you are going to use *get_detections_from_camera()*, you will need to s
 *enum - "opencv"|"retinaface"|"mtcnn"|"ssd"|"dlib"|"mediapipe"|"yolov8" (default: "ssd")*
 
 The detection framework to use for facial detection.  `ssd` is chosen as the default for a good balance of speed and accuracy.
+
+### face_labels
+
+*object*
+
+If configured, expects an object map of key:label, value:path to use in matching against reference face images.
+For example:
+
+``` json
+{
+  "matt": "/path/to/matt.jpg",
+  "suzy": "/path/to/suzy_photo.jpg"
+}
+```
+
+If the input image from get_detections() or get_detections_from_camera() verifies as a match of one of the images specified in the *face_labels* paths, the associated label will be returned.

@@ -55,15 +55,15 @@ class FacialDetector(Vision, Reconfigurable):
     def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
         self.DEPS = dependencies
         self.detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
+        self.face_labels = dict(config.attributes.fields["face_labels"].struct_value) or {}
+        
+        # store images in memory, this assume there will not be a large number
+        for label in self.face_labels:
+            im = Image.open(self.face_labels[label])
+            self.face_labels[label] = im
+
         return
-    
-    async def get_detections_from_camera(
-        self, camera_name: str, *, extra: Optional[Mapping[str, Any]] = None, timeout: Optional[float] = None
-    ) -> List[Detection]:
-        cam = Camera.from_robot(self.parent, camera_name)
-        cam_image = await cam.get_image()
-        return self.get_detections(cam_image)
-    
+        
     async def get_detections_from_camera(
         self, camera_name: str, *, extra: Optional[Mapping[str, Any]] = None, timeout: Optional[float] = None
     ) -> List[Detection]:
@@ -79,13 +79,20 @@ class FacialDetector(Vision, Reconfigurable):
         extra: Optional[Mapping[str, Any]] = None,
         timeout: Optional[float] = None,
     ) -> List[Detection]:
-        # note that some of the detector frameworks do not like RGBA, so we convert to RGB
-        results = DeepFace.extract_faces(img_path=numpy.array(image.convert('RGB')),enforce_detection=False, detector_backend=self.detection_framework)
         detections = []
-        for r in results:
-            if r["confidence"] > 0:
-                detections.append({ "confidence": r["confidence"], "class_name": "face", "x_min": r["facial_area"]["x"], "y_min": r["facial_area"]["y"], 
-                                    "x_max": r["facial_area"]["x"] + r["facial_area"]["w"], "y_max": r["facial_area"]["y"] + r["facial_area"]["h"]} )
+        if len(self.face_labels) == 0:
+            # note that some of the detector frameworks do not like RGBA, so we convert to RGB
+            results = DeepFace.extract_faces(img_path=numpy.array(image.convert('RGB')),enforce_detection=False, detector_backend=self.detection_framework)
+            for r in results:
+                if r["confidence"] > 0:
+                    detections.append({ "confidence": r["confidence"], "class_name": "face", "x_min": r["facial_area"]["x"], "y_min": r["facial_area"]["y"], 
+                                        "x_max": r["facial_area"]["x"] + r["facial_area"]["w"], "y_max": r["facial_area"]["y"] + r["facial_area"]["h"]} )
+        else:
+            for label in self.face_labels:
+                r = DeepFace.verify(enforce_detection=False, align=False, detector_backend=self.detection_framework, img1_path = numpy.array(self.face_labels[label].convert('RGB')), img2_path = numpy.array(image.convert('RGB')))
+                if r["verified"] == True:
+                    detections.append({ "confidence": 1, "class_name": label, "x_min": r["facial_areas"]["img2"]["x"], "y_min": r["facial_areas"]["img2"]["y"], 
+                                        "x_max": r["facial_areas"]["img2"]["x"] + r["facial_areas"]["img2"]["w"], "y_max": r["facial_areas"]["img2"]["y"] + r["facial_areas"]["img2"]["h"]} )
         return detections
 
     async def do_command(self):
