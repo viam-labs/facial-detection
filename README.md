@@ -36,6 +36,12 @@ Note: if you are going to use *get_detections_from_camera()*, you will need to s
 
 The detection framework to use for facial detection.  `ssd` is chosen as the default for a good balance of speed and accuracy.
 
+### recognition_model
+
+*enum -   "VGG-Face"|"Facenet"|"Facenet512"|"OpenFace"|"DeepFace"|"DeepID"|"ArcFace"|"Dlib"|"SFace" (default: "ArcFace")*
+
+The model to use for facial recognition.  `ArcFace` is chosen as the default for a good balance of speed and accuracy.
+
 ### face_labels
 
 *object*

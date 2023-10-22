@@ -34,6 +34,7 @@ class FacialDetector(Vision, Reconfigurable):
     MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "detector"), "facial-detector")
     # opencv, retinaface, mtcnn, ssd, dlib, mediapipe or yolov8
     detection_framework: str
+    model_name: str
 
     # Constructor
     @classmethod
@@ -49,12 +50,17 @@ class FacialDetector(Vision, Reconfigurable):
         detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
         if not detection_framework in frameworks:
             raise Exception("detection_framework must be one of 'opencv', 'retinaface', 'mtcnn', 'ssd', 'dlib', 'mediapipe','yolov8'")
+        models =  ["VGG-Face", "Facenet", "Facenet512", "OpenFace", "DeepFace", "DeepID", "ArcFace", "Dlib", "SFace"]
+        model_name = config.attributes.fields["recognition_model"].string_value or 'ArcFace'
+        if not model_name in models:
+            raise Exception("detection_framework must be one of 'VGG-Face', 'Facenet', 'Facenet512', 'OpenFace', 'DeepFace', 'DeepID', 'ArcFace', 'Dlib', 'SFace'")
         return
 
     # Handles attribute reconfiguration
     def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
         self.DEPS = dependencies
         self.detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
+        self.model_name = config.attributes.fields["recognition_model"].string_value or 'ArcFace'
         self.face_labels = dict(config.attributes.fields["face_labels"].struct_value) or {}
         self.disable_detect = config.attributes.fields["disable_detect"].bool_value
         self.disable_verify = config.attributes.fields["disable_verify"].bool_value
@@ -103,7 +109,7 @@ class FacialDetector(Vision, Reconfigurable):
     async def verify_image(self, image: Union[Image.Image, RawImage]):
         detection = {}
         for label in self.face_labels:
-                r = DeepFace.verify(enforce_detection=False, align=False, detector_backend=self.detection_framework, img1_path = numpy.array(self.face_labels[label].convert('RGB')), img2_path = numpy.array(image.convert('RGB')))
+                r = DeepFace.verify(enforce_detection=False, align=False, model_name=self.model_name, detector_backend=self.detection_framework, img1_path = numpy.array(self.face_labels[label].convert('RGB')), img2_path = numpy.array(image.convert('RGB')))
                 if r["verified"] == True:
                     detection = { "confidence": 1, "class_name": label, "x_min": r["facial_areas"]["img2"]["x"], "y_min": r["facial_areas"]["img2"]["y"], 
                                         "x_max": r["facial_areas"]["img2"]["x"] + r["facial_areas"]["img2"]["w"], "y_max": r["facial_areas"]["img2"]["y"] + r["facial_areas"]["img2"]["h"]}
