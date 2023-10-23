@@ -58,6 +58,12 @@ For example:
 
 If the input image from get_detections() or get_detections_from_camera() verifies as a match of one of the images specified in the *face_labels* paths, the associated label will be returned.
 
+### verify_threshold
+
+*number(default:.8)*
+
+If disable_verify is false and face_labels are set, if the verification confidence does not match or exceed this threshold it will return as a normal detected "face".
+
 ### disable_detect
 
 *boolean(default:false)*

@@ -35,7 +35,10 @@ class FacialDetector(Vision, Reconfigurable):
     # opencv, retinaface, mtcnn, ssd, dlib, mediapipe or yolov8
     detection_framework: str
     model_name: str
-
+    verify_threshold: float
+    disable_detect: bool
+    disable_verify: bool
+    
     # Constructor
     @classmethod
     def new(cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]) -> Self:
@@ -62,6 +65,7 @@ class FacialDetector(Vision, Reconfigurable):
         self.detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
         self.model_name = config.attributes.fields["recognition_model"].string_value or 'ArcFace'
         self.face_labels = dict(config.attributes.fields["face_labels"].struct_value) or {}
+        self.verify_threshold = config.attributes.fields["verify_threshold"].number_value or .8
         self.disable_detect = config.attributes.fields["disable_detect"].bool_value
         self.disable_verify = config.attributes.fields["disable_verify"].bool_value
 
@@ -96,7 +100,7 @@ class FacialDetector(Vision, Reconfigurable):
                                         "x_max": r["facial_area"]["x"] + r["facial_area"]["w"], "y_max": r["facial_area"]["y"] + r["facial_area"]["h"]}
                     if self.disable_verify == False:
                         v = await self.verify_image(image)
-                        if len(v):
+                        if len(v) and v["confidence"] >= self.verify_threshold:
                             detection = v
                     detections.append(detection)            
         elif self.disable_verify == False:
