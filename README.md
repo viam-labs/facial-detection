@@ -17,6 +17,14 @@ The facial-detector resource provides the following methods from Viam's built-in
 
 ### get_detections_from_camera(camera_name=*string*)
 
+Note: if using this method, any cameras you are using must be set in the `depends_on` array for the service configuration, for example:
+
+```json
+      "depends_on": [
+        "cam"
+      ]
+```
+
 ## Viam Service Configuration
 
 The following attributes may be configured as facial-detector config attributes.
