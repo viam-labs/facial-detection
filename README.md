@@ -6,7 +6,7 @@
 
 ``` bash
 sudo apt update && sudo apt upgrade -y
-apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
 ```
 
 ## API
