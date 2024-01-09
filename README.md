@@ -36,8 +36,6 @@ For example: the following configuration would use the `ssd` framework:
 }
 ```
 
-Note: if you are going to use *get_detections_from_camera()*, you will need to set any camera that you plan to use as a dependency for this service.
-
 ### detection_framework
 
 *enum - "opencv"|"retinaface"|"mtcnn"|"ssd"|"dlib"|"mediapipe"|"yolov8" (default: "ssd")*
@@ -70,13 +68,13 @@ If the input image from get_detections() or get_detections_from_camera() verifie
 
 *number(default:.8)*
 
-If disable_verify is false and face_labels are set, if the verification confidence does not match or exceed this threshold it will return as a normal detected "face".
+If [disable_verify](#disable_verify) is false and [face_labels](#face_labels) are set, if the verification confidence does not match or exceed this threshold, it will return as a normal detected "face".
 
 ### disable_detect
 
 *boolean(default:false)*
 
-If false, any faces detected but not verified as matching a label (if [disable_verify](#disable_verify) is false and [face_labels](#face_labels) are set) will be labeled as *face*.
+If [disable_verify](#disable_verify) is false and [face_labels](#face_labels) are set, if disable_detect is false, any faces detected but not verified as matching a label will be labeled as *face*.
 
 ### disable_verify
 
