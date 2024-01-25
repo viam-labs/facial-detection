@@ -6,7 +6,7 @@
 
 ``` bash
 sudo apt update && sudo apt upgrade -y
-sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
+sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6 python3-pip -y
 ```
 
 ## API
