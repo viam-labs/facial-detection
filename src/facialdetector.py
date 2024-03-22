@@ -3,6 +3,8 @@ from typing_extensions import Self
 
 from typing import Any, Final, List, Mapping, Optional, Union
 
+from os import walk
+
 from PIL import Image
 from deepface import DeepFace
 
@@ -38,6 +40,8 @@ class FacialDetector(Vision, Reconfigurable):
     verify_threshold: float
     disable_detect: bool
     disable_verify: bool
+    path: str
+    face_labels = {}
     
     # Constructor
     @classmethod
@@ -64,15 +68,18 @@ class FacialDetector(Vision, Reconfigurable):
         self.DEPS = dependencies
         self.detection_framework = config.attributes.fields["detection_framework"].string_value or 'ssd'
         self.model_name = config.attributes.fields["recognition_model"].string_value or 'ArcFace'
-        self.face_labels = dict(config.attributes.fields["face_labels"].struct_value) or {}
         self.verify_threshold = config.attributes.fields["verify_threshold"].number_value or .8
         self.disable_detect = config.attributes.fields["disable_detect"].bool_value
         self.disable_verify = config.attributes.fields["disable_verify"].bool_value
 
-        # store images in memory, this assumes there will not be a large number
-        for label in self.face_labels:
-            im = Image.open(self.face_labels[label])
-            self.face_labels[label] = im
+        # List all files and filter for jpgs, then load the jpgs into memory, assuming there are not that many
+        self.path = config.attributes.fields["path"].string_value
+        filenames = next(walk(self.path), (None, None, []))[2]
+        for filename in filenames:
+            if filename.endswith(".jpg"):
+                name = filename.removesuffix(".jpg")
+                image = Image.open(self.path+filename)
+                self.face_labels[name] = image
 
         return
         
