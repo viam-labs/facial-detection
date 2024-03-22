@@ -48,7 +48,7 @@ The detection framework to use for facial detection.  `ssd` is chosen as the def
 
 The model to use for facial recognition.  `ArcFace` is chosen as the default for a good balance of speed and accuracy.
 
-### face_labels
+### path
 
 *object*
 
