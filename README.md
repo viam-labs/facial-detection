@@ -50,7 +50,7 @@ The model to use for facial recognition.  `ArcFace` is chosen as the default for
 
 ### path
 
-*object*
+*string*
 
 Provide a path to where the images are stored. The filename (without .jpg) will be used as the label. This should work well with a hand full of images.
 
