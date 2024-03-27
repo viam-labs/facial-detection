@@ -18,3 +18,11 @@ fi
 # Be sure to use `exec` so that termination signals reach the python process,
 # or handle forwarding termination signals manually
 exec python3 -m src $@
+
+OS=$(uname)
+if [[ $OS == "Linux" ]]; then
+  echo "Running on Linux"
+  echo "Updating and installing dependencies"
+  sudo apt update && sudo apt upgrade -y
+  sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6 -y
+fi

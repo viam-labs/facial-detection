@@ -1,21 +1,8 @@
-# Facial Detector modular resource
+# `facial-detector` modular resource
 
 This module implements the [vision API](https://python.viam.dev/autoapi/viam/services/vision/client/index.html) in the `facial-detector` model and leverages the [DeepFace](https://github.com/serengil/deepface) library to perform facial detections.
 
 ## Requirements
-
-This module is compatible with the following platforms:
-
-- MacOS (darwin)
-- Linux
-
-Run the following command to get your operating system name, and then proceed to the instructions corresponding to your operating system.
-
-```bash
-uname -s
-```
-
-On MacOS:
 
 `run.sh` will automatically install the following system dependencies if not already set up on the machine:
 
@@ -26,17 +13,17 @@ On MacOS:
 - `tensorflow==2.14.0rc1`
 - `ml_dtypes==0.2.0`
 
-On Linux:
+On Linux machines, `run.sh` will also install the following:
 
-``` bash
-sudo apt update && sudo apt upgrade -y
-sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
-```
+- `ffmpeg`
+- `libsm6`
+- `libxext6`
+
 
 ## Configure your facial detector
 
 > [!NOTE]
-> Before configuring your facial-detecotr, you must [create a machine](https://docs.viam.com/manage/fleet/machines/#add-a-new-machine).
+> Before configuring your facial-detector, you must [create a machine](https://docs.viam.com/manage/fleet/machines/#add-a-new-machine).
 
 Navigate to the **Config** tab of your machine's page in [the Viam app](https://app.viam.com/).
 Click on the **Services** subtab and click **Create service**.
@@ -101,6 +88,6 @@ The `facial-detector` resource provides the following methods from [Viam's visio
 | [`get_detections`](https://python.viam.dev/autoapi/viam/services/vision/client/index.html#viam.services.vision.client.VisionClient.get_detections) | `image` | Get a list of detections in the given image using the specified detector.|
  | [`get_detections_from_camera`](https://python.viam.dev/autoapi/viam/services/vision/client/index.html#viam.services.vision.client.VisionClient.get_classifications_from_camera) | `camera_name=string` | Get a list of classifications in the next image given a camera and a classifier.|
 
-### Next Steps
+### Next steps
 
 [Create a Facial Verification System](https://docs.viam.com/tutorials/projects/verification-system/#configure-a-verification-system) using the facial detector you configured.
