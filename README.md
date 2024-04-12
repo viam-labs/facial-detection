@@ -1,6 +1,9 @@
-# Facial Detector modular resource
+# [Facial Detector modular resource](https://app.viam.com/module/viam-labs/facial-detector)
 
-This module implements the [vision API](https://python.viam.dev/autoapi/viam/services/vision/client/index.html) in the `facial-detector` model and leverages the [DeepFace](https://github.com/serengil/deepface) library to perform facial detections.
+This module implements the [`rdk:service:vision` API](https://python.viam.dev/autoapi/viam/services/vision/client/index.html) in a `facial-detector` model to be used with (`viam-server`](https://docs.viam.com/). This detector leverages the [DeepFace](https://github.com/serengil/deepface) library to perform facial detections.
+
+> [!NOTE]
+> For more information, see [Modular Resources](https://docs.viam.com/registry/#modular-resources).
 
 ## Requirements
 
@@ -36,12 +39,12 @@ sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
 ## Configure your facial detector
 
 > [!NOTE]
-> Before configuring your facial-detector, you must [create a machine](https://docs.viam.com/manage/fleet/machines/#add-a-new-machine).
+> Before configuring your vision service, you must [create a machine](https://docs.viam.com/manage/fleet/machines/#add-a-new-machine).
 
 Navigate to the **Config** tab of your machine's page in [the Viam app](https://app.viam.com/).
 Click on the **Services** subtab and click **Create service**.
 Select the `vision` type, then select the `detector:facial-detector` model. 
-Click **Add module**, then enter a name for your facial detector and click **Create**.
+Click **Add module**, then enter a name for your vision service and click **Create**.
 
 On the new service panel, copy and paste the following attribute template into your vision service's **Attributes** box:
 
@@ -64,7 +67,7 @@ On the new service panel, copy and paste the following attribute template into y
 
 ### Attributes 
 
-The following attributes are available for `vision:facial-detector:ssd` facial-detectors:
+The following attributes are available for `vision:facial-detector:ssd` vision services:
 
 | Name   | Type | Inclusion | Description| Supported |
 |--------|-------|----------|------------|-----------|
