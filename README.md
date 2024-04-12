@@ -43,7 +43,7 @@ Click on the **Services** subtab and click **Create service**.
 Select the `vision` type, then select the `detector:facial-detector` model. 
 Click **Add module**, then enter a name for your facial detector and click **Create**.
 
-On the new component panel, copy and paste the following attribute template into your vision service's **Attributes** box:
+On the new service panel, copy and paste the following attribute template into your vision service's **Attributes** box:
 
 ```json 
 {
