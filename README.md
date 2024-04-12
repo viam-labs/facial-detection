@@ -36,7 +36,7 @@ sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
 ## Configure your facial detector
 
 > [!NOTE]
-> Before configuring your facial-detctor, you must [create a machine](https://docs.viam.com/manage/fleet/machines/#add-a-new-machine).
+> Before configuring your facial-detector, you must [create a machine](https://docs.viam.com/manage/fleet/machines/#add-a-new-machine).
 
 Navigate to the **Config** tab of your machine's page in [the Viam app](https://app.viam.com/).
 Click on the **Services** subtab and click **Create service**.
