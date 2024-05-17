@@ -76,7 +76,7 @@ The following attributes are available for `vision:facial-detector:ssd` vision s
 | `face_labels` | object  | Optional | An object map of `key:label, value:path` for matching against reference face images. | - |
 | `verify_threshold` | number  | Optional | If `disable_verify` is set to `false` and `face_labels` are set, this threshold must be met or exceeded for a verification match.<br> Default: `0.8` | - |
 | `disable_detect` | bool | Optional| If set to `false`, any faces detected but not verified as matching a label will be labeled as "face".<br> Default: `false` | - |
-| `disable_verify` | bool | Optional | If set to `false` and `face_labels` are set, will attempt to verify any faces detected. If you only want verified faces, set `disable_verify` and `disable_detect` to `true`.<br> Default: `false` | - |
+| `disable_verify` | bool | Optional | If set to `false` and `face_labels` are set, will attempt to verify any faces detected. If you only want verified faces, set `disable_verify` to `false` and `disable_detect` to `true`.<br> Default: `false` | - |
 
 
 ### Example configuration 
