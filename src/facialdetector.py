@@ -88,7 +88,7 @@ class FacialDetector(Vision, Reconfigurable):
     async def get_detections_from_camera(
         self, camera_name: str, *, extra: Optional[Mapping[str, Any]] = None, timeout: Optional[float] = None
     ) -> List[Detection]:
-        return await self.get_detections(self.get_cam_image(camera_name))
+        return await self.get_detections(await self.get_cam_image(camera_name))
     
     async def get_detections(
         self,
@@ -152,7 +152,7 @@ class FacialDetector(Vision, Reconfigurable):
     ) -> CaptureAllResult:
         result = CaptureAllResult()
         result.image = await self.get_cam_image(camera_name)
-        result.classifications = await self.get_classifications(result.image, 1)
+        result.classifications = await self.get_detections(result.image, 1)
         return result
 
     async def get_properties(
