@@ -6,9 +6,7 @@ from typing import Any, Final, List, Mapping, Optional, Union
 from PIL import Image
 from deepface import DeepFace
 
-from viam.media.video import RawImage
 from viam.resource.types import RESOURCE_NAMESPACE_RDK, RESOURCE_TYPE_SERVICE, Subtype
-from viam.utils import ValueTypes
 
 from viam.module.types import Reconfigurable
 from viam.proto.app.robot import ComponentConfig
@@ -17,9 +15,11 @@ from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
 
-from viam.services.vision import Vision
+from viam.services.vision import Vision, CaptureAllResult
+from viam.proto.service.vision import GetPropertiesResponse
 
-from viam.components.camera import Camera
+from viam.components.camera import Camera, ViamImage
+from viam.media.utils.pil import viam_to_pil_image
 
 from viam.logging import getLogger
 
@@ -76,23 +76,30 @@ class FacialDetector(Vision, Reconfigurable):
 
         return
         
-    async def get_detections_from_camera(
-        self, camera_name: str, *, extra: Optional[Mapping[str, Any]] = None, timeout: Optional[float] = None
-    ) -> List[Detection]:
+    async def get_cam_image(
+        self,
+        camera_name: str
+    ) -> Image:
         actual_cam = self.DEPS[Camera.get_resource_name(camera_name)]
         cam = cast(Camera, actual_cam)
         cam_image = await cam.get_image(mime_type="image/jpeg")
-        return await self.get_detections(cam_image)
+        return viam_to_pil_image(cam_image)
+    
+    async def get_detections_from_camera(
+        self, camera_name: str, *, extra: Optional[Mapping[str, Any]] = None, timeout: Optional[float] = None
+    ) -> List[Detection]:
+        return await self.get_detections(self.get_cam_image(camera_name))
     
     async def get_detections(
         self,
-        image: Union[Image.Image, RawImage],
+        image: ViamImage,
         *,
         extra: Optional[Mapping[str, Any]] = None,
         timeout: Optional[float] = None,
     ) -> List[Detection]:
         detections = []
         if self.disable_detect == False:
+            image = viam_to_pil_image(image)
             results = DeepFace.extract_faces(img_path=numpy.array(image.convert('RGB')),enforce_detection=False, detector_backend=self.detection_framework)
             for r in results:
                 if r["confidence"] > 0:
@@ -110,7 +117,7 @@ class FacialDetector(Vision, Reconfigurable):
         
         return detections
 
-    async def verify_image(self, image: Union[Image.Image, RawImage]):
+    async def verify_image(self, image: Image.Image):
         detection = {}
         for label in self.face_labels:
                 r = DeepFace.verify(distance_metric="euclidean_l2", enforce_detection=False, align=False, model_name=self.model_name, detector_backend=self.detection_framework, img1_path = numpy.array(self.face_labels[label].convert('RGB')), img2_path = numpy.array(image.convert('RGB')))
@@ -131,3 +138,31 @@ class FacialDetector(Vision, Reconfigurable):
     
     async def get_object_point_clouds(self):
         return
+    
+    async def capture_all_from_camera(
+        self,
+        camera_name: str,
+        return_image: bool = False,
+        return_classifications: bool = False,
+        return_detections: bool = False,
+        return_object_point_clouds: bool = False,
+        *,
+        extra: Optional[Mapping[str, Any]] = None,
+        timeout: Optional[float] = None,
+    ) -> CaptureAllResult:
+        result = CaptureAllResult()
+        result.image = await self.get_cam_image(camera_name)
+        result.classifications = await self.get_classifications(result.image, 1)
+        return result
+
+    async def get_properties(
+        self,
+        *,
+        extra: Optional[Mapping[str, Any]] = None,
+        timeout: Optional[float] = None,
+    ) -> GetPropertiesResponse:
+        return GetPropertiesResponse(
+            classifications_supported=False,
+            detections_supported=True,
+            object_point_clouds_supported=False
+        )

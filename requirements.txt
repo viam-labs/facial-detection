@@ -1,4 +1,4 @@
-viam-sdk  >= 0.5.1
+viam-sdk~=0.21.0rc1
 deepface
 numpy
 pillow
