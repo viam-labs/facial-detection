@@ -12,30 +12,6 @@ This module is compatible with the following platforms:
 - MacOS (darwin)
 - Linux
 
-Run the following command to get your operating system name, and then proceed to the instructions corresponding to your operating system.
-
-```bash
-uname -s
-```
-
-On MacOS:
-
-`run.sh` will automatically install the following system dependencies if not already set up on the machine:
-
-- `viam-sdk  >= 0.5.1`
-- `deepface`
-- `numpy`
-- `pillow`
-- `tensorflow==2.14.0rc1`
-- `ml_dtypes==0.2.0`
-
-On Linux:
-
-``` bash
-sudo apt update && sudo apt upgrade -y
-sudo apt-get update && sudo apt-get install ffmpeg libsm6 libxext6  -y
-```
-
 ## Configure your facial detector
 
 > [!NOTE]

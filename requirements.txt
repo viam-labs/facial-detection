@@ -1,6 +1,6 @@
-viam-sdk~=0.21.0rc1
 deepface
 numpy
+tensorflow
+ml_dtypes
 pillow
-tensorflow==2.14.0rc1
-ml_dtypes==0.2.0
+tf-keras
