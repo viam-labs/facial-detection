@@ -31,7 +31,7 @@ LOGGER = getLogger(__name__)
 
 class FacialDetector(Vision, Reconfigurable):
     
-    MODEL: ClassVar[Model] = Model(ModelFamily("viam-labs", "detector"), "facial-detector")
+    MODEL: ClassVar[Model] = Model(ModelFamily("mcvella", "detector"), "facial-detector")
     # opencv, retinaface, mtcnn, ssd, dlib, mediapipe or yolov8
     detection_framework: str
     model_name: str

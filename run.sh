@@ -11,11 +11,7 @@ if [ -f .installed ]
     fi
     uv venv --python 3.12
     source .venv/bin/activate
-    if [[ $OS == "Linux" ]]; then
-      uv pip install -U -r requirements-linux.txt
-    else
-      uv pip install -U -r requirements.txt
-    fi
+    uv pip install -U -r requirements.txt
     if [ $? -eq 0 ]
       then
         touch .installed

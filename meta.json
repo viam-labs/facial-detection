@@ -6,7 +6,7 @@
   "models": [
     {
       "api": "rdk:service:vision",
-      "model": "viam-labs:detector:facial-detector"
+      "model": "mcvella:detector:facial-detector"
     }
   ],
   "entrypoint": "run.sh"
