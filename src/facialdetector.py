@@ -8,7 +8,6 @@ from viam.media.video import CameraMimeType
 from PIL import Image
 from deepface import DeepFace
 
-from viam.resource.types import RESOURCE_NAMESPACE_RDK, RESOURCE_TYPE_SERVICE, Subtype
 
 from viam.module.types import Reconfigurable
 from viam.proto.app.robot import ComponentConfig
