@@ -19,7 +19,7 @@ if [ -f .installed ]
 
     # viam-sdk and the required version of tensorflow are incompatible, so we hack this by installing
     # viam-sdk afterwards
-    uv pip install viam-sdk==0.31.0
+    uv pip install viam-sdk==0.79.1
 
     if [[ $OS == "Linux" ]]; then
       echo "Running on Linux"
