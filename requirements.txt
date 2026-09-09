@@ -4,3 +4,4 @@ tensorflow
 ml_dtypes
 pillow
 tf-keras
+viam-sdk==0.80.0
