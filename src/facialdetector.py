@@ -140,7 +140,7 @@ class FacialDetector(Vision, Reconfigurable):
         timeout: Optional[float] = None,
     ) -> List[Detection]:
         detections = []
-        if self.disable_detect == False:
+        if not self.disable_detect:
             image = viam_to_pil_image(image)
             results = DeepFace.extract_faces(
                 img_path=numpy.array(image.convert("RGB")),
@@ -157,12 +157,12 @@ class FacialDetector(Vision, Reconfigurable):
                         "x_max": r["facial_area"]["x"] + r["facial_area"]["w"],
                         "y_max": r["facial_area"]["y"] + r["facial_area"]["h"],
                     }
-                    if self.disable_verify == False:
+                    if not self.disable_verify:
                         v = await self.verify_image(image)
                         if len(v) and v["confidence"] >= self.verify_threshold:
                             detection = v
                     detections.append(detection)
-        elif self.disable_verify == False:
+        elif not self.disable_verify:
             v = await self.verify_image(image)
             if len(v):
                 detections.append(v)
@@ -181,7 +181,7 @@ class FacialDetector(Vision, Reconfigurable):
                 img1_path=numpy.array(self.face_labels[label].convert("RGB")),
                 img2_path=numpy.array(image.convert("RGB")),
             )
-            if r["verified"] == True:
+            if r["verified"]:
                 detection = {
                     "confidence": r["distance"] / r["threshold"],
                     "class_name": label,
