@@ -1,8 +1,8 @@
 import asyncio
-import sys
 
-from viam.services.vision import VisionClient
 from viam.module.module import Module
+from viam.services.vision import VisionClient
+
 from .facialdetector import FacialDetector
 
 

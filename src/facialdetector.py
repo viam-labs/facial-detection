@@ -1,43 +1,27 @@
 from typing import (
-    ClassVar,
-    Mapping,
-    Sequence,
     Any,
-    Dict,
-    Optional,
-    Tuple,
-    Final,
+    ClassVar,
     List,
+    Mapping,
+    Optional,
     cast,
 )
-from typing_extensions import Self
 
-from typing import Any, Final, List, Mapping, Optional, Union
-
-from viam.media.video import CameraMimeType
-
-from PIL import Image
+import numpy
 from deepface import DeepFace
-
-
+from PIL import Image
+from typing_extensions import Self
+from viam.components.camera import Camera, ViamImage
+from viam.logging import getLogger
+from viam.media.utils.pil import viam_to_pil_image
+from viam.media.video import CameraMimeType
 from viam.module.types import Reconfigurable
 from viam.proto.app.robot import ComponentConfig
-from viam.proto.service.vision import Detection
 from viam.proto.common import ResourceName
+from viam.proto.service.vision import Detection, GetPropertiesResponse
 from viam.resource.base import ResourceBase
 from viam.resource.types import Model, ModelFamily
-
-from viam.services.vision import Vision, CaptureAllResult
-from viam.proto.service.vision import GetPropertiesResponse
-
-from viam.components.camera import Camera, ViamImage
-from viam.media.utils.pil import viam_to_pil_image
-
-from viam.logging import getLogger
-
-import time
-import asyncio
-import numpy
+from viam.services.vision import CaptureAllResult, Vision
 
 LOGGER = getLogger(__name__)
 
@@ -77,7 +61,7 @@ class FacialDetector(Vision, Reconfigurable):
         detection_framework = (
             config.attributes.fields["detection_framework"].string_value or "ssd"
         )
-        if not detection_framework in frameworks:
+        if detection_framework not in frameworks:
             raise Exception(
                 "detection_framework must be one of 'opencv', 'retinaface', 'mtcnn', 'ssd', 'dlib', 'mediapipe','yolov8'"
             )
@@ -95,7 +79,7 @@ class FacialDetector(Vision, Reconfigurable):
         model_name = (
             config.attributes.fields["recognition_model"].string_value or "ArcFace"
         )
-        if not model_name in models:
+        if model_name not in models:
             raise Exception(
                 "detection_framework must be one of 'VGG-Face', 'Facenet', 'Facenet512', 'OpenFace', 'DeepFace', 'DeepID', 'ArcFace', 'Dlib', 'SFace'"
             )

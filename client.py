@@ -1,11 +1,11 @@
 import asyncio
 import os
-from PIL import Image
 
+from PIL import Image
 from viam import logging
 from viam.robot.client import RobotClient
-from viam.services.vision import VisionClient
 from viam.rpc.dial import Credentials, DialOptions
+from viam.services.vision import VisionClient
 
 # these must be set, you can get them from your robot's 'CODE SAMPLE' tab
 robot_secret = os.getenv("ROBOT_SECRET") or ""
