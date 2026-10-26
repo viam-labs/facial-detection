@@ -27,9 +27,7 @@ LOGGER = getLogger(__name__)
 
 
 class FacialDetector(Vision, Reconfigurable):
-    MODEL: ClassVar[Model] = Model(
-        ModelFamily("mcvella", "detector"), "facial-detector"
-    )
+    MODEL: ClassVar[Model] = Model(ModelFamily("mcvella", "detector"), "facial-detector")
     # opencv, retinaface, mtcnn, ssd, dlib, mediapipe or yolov8
     detection_framework: str
     model_name: str
@@ -39,9 +37,7 @@ class FacialDetector(Vision, Reconfigurable):
 
     # Constructor
     @classmethod
-    def new(
-        cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
-    ) -> Self:
+    def new(cls, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]) -> Self:
         my_class = cls(config.name)
         my_class.reconfigure(config, dependencies)
         return my_class
@@ -58,9 +54,7 @@ class FacialDetector(Vision, Reconfigurable):
             "mediapipe",
             "yolov8",
         ]
-        detection_framework = (
-            config.attributes.fields["detection_framework"].string_value or "ssd"
-        )
+        detection_framework = config.attributes.fields["detection_framework"].string_value or "ssd"
         if detection_framework not in frameworks:
             raise Exception(
                 "detection_framework must be one of 'opencv', 'retinaface', 'mtcnn', 'ssd', 'dlib', 'mediapipe','yolov8'"
@@ -76,9 +70,7 @@ class FacialDetector(Vision, Reconfigurable):
             "Dlib",
             "SFace",
         ]
-        model_name = (
-            config.attributes.fields["recognition_model"].string_value or "ArcFace"
-        )
+        model_name = config.attributes.fields["recognition_model"].string_value or "ArcFace"
         if model_name not in models:
             raise Exception(
                 "detection_framework must be one of 'VGG-Face', 'Facenet', 'Facenet512', 'OpenFace', 'DeepFace', 'DeepID', 'ArcFace', 'Dlib', 'SFace'"
@@ -86,22 +78,12 @@ class FacialDetector(Vision, Reconfigurable):
         return
 
     # Handles attribute reconfiguration
-    def reconfigure(
-        self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]
-    ):
+    def reconfigure(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]):
         self.DEPS = dependencies
-        self.detection_framework = (
-            config.attributes.fields["detection_framework"].string_value or "ssd"
-        )
-        self.model_name = (
-            config.attributes.fields["recognition_model"].string_value or "ArcFace"
-        )
-        self.face_labels = (
-            dict(config.attributes.fields["face_labels"].struct_value) or {}
-        )
-        self.verify_threshold = (
-            config.attributes.fields["verify_threshold"].number_value or 0.8
-        )
+        self.detection_framework = config.attributes.fields["detection_framework"].string_value or "ssd"
+        self.model_name = config.attributes.fields["recognition_model"].string_value or "ArcFace"
+        self.face_labels = dict(config.attributes.fields["face_labels"].struct_value) or {}
+        self.verify_threshold = config.attributes.fields["verify_threshold"].number_value or 0.8
         self.disable_detect = config.attributes.fields["disable_detect"].bool_value
         self.disable_verify = config.attributes.fields["disable_verify"].bool_value
 
@@ -187,10 +169,8 @@ class FacialDetector(Vision, Reconfigurable):
                     "class_name": label,
                     "x_min": r["facial_areas"]["img2"]["x"],
                     "y_min": r["facial_areas"]["img2"]["y"],
-                    "x_max": r["facial_areas"]["img2"]["x"]
-                    + r["facial_areas"]["img2"]["w"],
-                    "y_max": r["facial_areas"]["img2"]["y"]
-                    + r["facial_areas"]["img2"]["h"],
+                    "x_max": r["facial_areas"]["img2"]["x"] + r["facial_areas"]["img2"]["w"],
+                    "y_max": r["facial_areas"]["img2"]["y"] + r["facial_areas"]["img2"]["h"],
                 }
                 break
         return detection
